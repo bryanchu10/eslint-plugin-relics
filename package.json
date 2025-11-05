@@ -1,6 +1,6 @@
 {
     "name": "eslint-plugin-relics",
-    "version": "0.8.3",
+    "version": "0.8.4",
     "description": "coding rules",
     "type": "module",
     "main": "lib/index.cjs",

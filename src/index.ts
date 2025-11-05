@@ -11,13 +11,25 @@ export const rules = {
 
 export const configs = {
     recommended: {
+        plugins: {
+            relics: {
+                rules,
+            },
+        },
+        rules: {
+            "relics/enforce-foo-bar": "error",
+            "relics/prefer-explicit-property-checks": "error",
+            "relics/prefer-loose-equality": "error",
+        },
+    },
+    "recommended-legacy": {
         plugins: ["relics"],
         rules: {
             "relics/enforce-foo-bar": "error",
             "relics/prefer-explicit-property-checks": "error",
             "relics/prefer-loose-equality": "error",
-        }
-    }
+        },
+    },
 }
 
 export default {
