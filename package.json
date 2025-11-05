@@ -14,7 +14,7 @@
     "scripts": {
         "test": "vitest run",
         "prebuild": "rm -rf lib",
-        "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
+        "build": "rollup --config rollup.config.ts --configPlugin typescript",
         "prepublishOnly": "npm run build"
     },
     "license": "MIT",

@@ -22,9 +22,7 @@ export default defineConfig([
             },
         ],
         plugins: [
-            typescript({
-                include: ["src/**/*.ts"],
-            }),
+            typescript({ tsconfig: './tsconfig.json' }),
         ],
     },
 ]);
