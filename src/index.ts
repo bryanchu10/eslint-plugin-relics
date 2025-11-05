@@ -28,5 +28,5 @@ export const configs = {
 
 export default {
     rules,
-    plugin,
+    configs,
 };
