@@ -19,8 +19,12 @@ export default defineConfig([
                 format: 'cjs',
                 sourcemap: false,
                 exports: "named",
-            }
+            },
         ],
-        plugins: [typescript({ tsconfig: './tsconfig.json' })]
-    }
+        plugins: [
+            typescript({
+                include: ["src/**/*.ts"],
+            }),
+        ],
+    },
 ]);
