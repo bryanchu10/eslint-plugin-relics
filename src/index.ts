@@ -9,9 +9,15 @@ export const rules = {
     "prefer-loose-equality": preferLooseEquality,
 };
 
+const plugin = {
+    rules
+}
+
 export const configs = {
     recommended: {
-        plugins: ["relics"],
+        plugins: {
+            relic: plugin,
+        },
         rules: {
             "relics/enforce-foo-bar": "error",
             "relics/prefer-explicit-property-checks": "error",
@@ -20,9 +26,7 @@ export const configs = {
     }
 }
 
-const plugin = { 
+export default {
     rules,
-    configs,
+    plugin,
 };
-
-export default plugin;
