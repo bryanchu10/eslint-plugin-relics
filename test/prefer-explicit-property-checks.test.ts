@@ -25,7 +25,7 @@ ruleTester.run("prefer-explicit-property-checks", preferExplicitPropertyChecks, 
         {
             code: "if (user?.profile) {}",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "ifStatement",
                 data: { original: "user?.profile", suggested: "user && user.profile" }
             }],
             output: "if (user && user.profile) {}"
@@ -33,7 +33,7 @@ ruleTester.run("prefer-explicit-property-checks", preferExplicitPropertyChecks, 
         {
             code: "if (user?.profile?.name) {}",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "ifStatement",
                 data: { original: "user?.profile?.name", suggested: "user && user.profile && user.profile.name" }
             }],
             output: "if (user && user.profile && user.profile.name) {}"
@@ -41,7 +41,7 @@ ruleTester.run("prefer-explicit-property-checks", preferExplicitPropertyChecks, 
         {
             code: "if (foo?.bar) {}",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "ifStatement",
                 data: { original: "foo?.bar", suggested: "foo && foo.bar" }
             }],
             output: "if (foo && foo.bar) {}"
@@ -49,7 +49,7 @@ ruleTester.run("prefer-explicit-property-checks", preferExplicitPropertyChecks, 
         {
             code: "if (foo?.bar?.baz) {}",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "ifStatement",
                 data: { original: "foo?.bar?.baz", suggested: "foo && foo.bar && foo.bar.baz" }
             }],
             output: "if (foo && foo.bar && foo.bar.baz) {}"
@@ -57,108 +57,99 @@ ruleTester.run("prefer-explicit-property-checks", preferExplicitPropertyChecks, 
         {
             code: "if (a?.b?.c?.d) {}",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "ifStatement",
                 data: { original: "a?.b?.c?.d", suggested: "a && a.b && a.b.c && a.b.c.d" }
             }],
             output: "if (a && a.b && a.b.c && a.b.c.d) {}"
         },
+        // 非 if statement 場景，僅報錯但不 autofix
         {
             code: "let x = user?.profile;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "user?.profile", suggested: "user && user.profile" }
             }],
-            output: "let x = user && user.profile;"
+            output: null,
         },
         {
             code: "let x = user?.profile?.name;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "user?.profile?.name", suggested: "user && user.profile && user.profile.name" }
             }],
-            output: "let x = user && user.profile && user.profile.name;"
+            output: null,
         },
         {
             code: "x = foo?.bar;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "foo?.bar", suggested: "foo && foo.bar" }
             }],
-            output: "x = foo && foo.bar;"
+            output: null,
         },
         {
             code: "x = foo?.bar?.baz;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "foo?.bar?.baz", suggested: "foo && foo.bar && foo.bar.baz" }
             }],
-            output: "x = foo && foo.bar && foo.bar.baz;"
+            output: null,
         },
         {
             code: "const y = a?.b;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "a?.b", suggested: "a && a.b" }
             }],
-            output: "const y = a && a.b;"
+            output: null,
         },
         {
             code: "const y = a?.b?.c?.d;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "a?.b?.c?.d", suggested: "a && a.b && a.b.c && a.b.c.d" }
             }],
-            output: "const y = a && a.b && a.b.c && a.b.c.d;"
+            output: null,
         },
         {
             code: "function f() { return user?.profile; }",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "user?.profile", suggested: "user && user.profile" }
             }],
-            output: "function f() { return user && user.profile; }"
+            output: null,
         },
         {
             code: "function f() { return user?.profile?.name; }",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "user?.profile?.name", suggested: "user && user.profile && user.profile.name" }
             }],
-            output: "function f() { return user && user.profile && user.profile.name; }"
+            output: null,
         },
         {
             code: "foo?.bar;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "foo?.bar", suggested: "foo && foo.bar" }
             }],
-            output: "foo && foo.bar;"
+            output: null,
         },
         {
             code: "foo?.bar?.baz;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "foo?.bar?.baz", suggested: "foo && foo.bar && foo.bar.baz" }
             }],
-            output: "foo && foo.bar && foo.bar.baz;"
-        },
-        {
-            code: "if (user?.foo) {}",
-            errors: [{
-                messageId: "preferExplicitChecks",
-                data: { original: "user?.foo", suggested: "user && user.foo" }
-            }],
-            output: "if (user && user.foo) {}"
+            output: null,
         },
         {
             code: "let a = foo?.bar;",
             errors: [{
-                messageId: "preferExplicitChecks",
+                messageId: "others",
                 data: { original: "foo?.bar", suggested: "foo && foo.bar" }
             }],
-            output: "let a = foo && foo.bar;"
-        }
-    ]
+            output: null,
+        },
+    ],
 });
-
-console.log("All tests passed for prefer-explicit-property-checks.test.ts");

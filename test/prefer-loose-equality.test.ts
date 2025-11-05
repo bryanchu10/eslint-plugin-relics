@@ -28,5 +28,3 @@ ruleTester.run(
         ],
     }
 );
-
-console.log("All tests passed for prefer-loose-equality.test.ts");

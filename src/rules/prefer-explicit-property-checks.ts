@@ -27,68 +27,94 @@ export const preferExplicitPropertyChecks: Rule.RuleModule = {
         fixable: "code",
         schema: [],
         messages: {
-            preferExplicitChecks: "請將 '{{original}}' 改寫為 '{{suggested}}'，避免在條件或賦值等情境中使用可選串連（?.）語法。",
+            ifStatement: `避免在條件判斷中使用可選串連（?.）語法，請將 "{{original}}" 改為 "{{suggested}}"。`,
+            others: `避免使用可選串連（?.）語法`,
         },
     },
     create(context: Rule.RuleContext) {
-        function checkChainExpression(chainExpr: ChainExpression, fixerTarget: Node) {
+        function checkChainExpression(chainExpr: ChainExpression, fixerTarget: Node, fixable: boolean) {
             let chain: unknown = chainExpr.expression;
             const parts: string[] = [];
+
             while (isMemberExpression(chain)) {
-                if (chain.computed) return;
-                if (!isIdentifier(chain.property)) return;
+                if (chain.computed) {
+                    return;
+                }
+                if (!isIdentifier(chain.property)) {
+                    return;
+                };
                 parts.unshift(chain.property.name);
                 chain = chain.object;
             }
+
             if (isIdentifier(chain)) {
                 parts.unshift(chain.name);
-            } else {
+            }
+            else {
                 return;
             }
-            if (parts.length < 2) return;
-            const sourceCode = context.getSourceCode(); // v9 已經棄用，這邊相容 v8
+
+            if (parts.length < 2) {
+                return;
+            }
+
+            const sourceCode = context.getSourceCode();
             const original = sourceCode.getText(fixerTarget);
             let suggested = parts[0];
+
             for (let i = 1; i < parts.length; i++) {
                 suggested += ` && ${parts.slice(0, i + 1).join(".")}`;
             }
-            context.report({
+
+            let messageId = "others";
+
+            if (fixable) {
+                messageId = "ifStatement";
+            }
+
+            const reportObj: Rule.ReportDescriptor = {
                 node: fixerTarget,
-                messageId: "preferExplicitChecks",
+                messageId,
                 data: {
                     original,
-                    suggested
+                    suggested,
                 },
-                fix(fixer) {
+            };
+
+            if (fixable) {
+                (reportObj as Rule.ReportDescriptor & { fix: (fixer: Rule.RuleFixer) => Rule.Fix })
+                    .fix = function(fixer: Rule.RuleFixer) {
                     return fixer.replaceText(fixerTarget, suggested);
-                }
-            });
+                };
+            }
+
+            context.report(reportObj);
         }
 
         return {
             IfStatement(node: IfStatement) {
                 if (node.test && node.test.type === "ChainExpression") {
-                    checkChainExpression(node.test as ChainExpression, node.test);
+                    checkChainExpression(node.test as ChainExpression, node.test, true);
                 }
             },
             AssignmentExpression(node: AssignmentExpression) {
                 if (node.right && node.right.type === "ChainExpression") {
-                    checkChainExpression(node.right as ChainExpression, node.right);
+                    checkChainExpression(node.right as ChainExpression, node.right, false);
                 }
             },
             VariableDeclarator(node: VariableDeclarator) {
                 if (node.init && node.init.type === "ChainExpression") {
-                    checkChainExpression(node.init as ChainExpression, node.init);
+                    checkChainExpression(node.init as ChainExpression, node.init, false);
                 }
             },
             ReturnStatement(node: ReturnStatement) {
                 if (node.argument && node.argument.type === "ChainExpression") {
-                    checkChainExpression(node.argument as ChainExpression, node.argument);
+                    checkChainExpression(node.argument as ChainExpression, node.argument, false);
                 }
             },
             ExpressionStatement(node: ExpressionStatement) {
                 if (node.expression && node.expression.type === "ChainExpression") {
-                    checkChainExpression(node.expression as ChainExpression, node.expression);
+                    checkChainExpression(node.expression as ChainExpression, node.expression, false);
                 }
             }
         };

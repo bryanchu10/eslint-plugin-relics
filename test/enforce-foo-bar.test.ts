@@ -19,5 +19,3 @@ ruleTester.run("enforce-foo-bar", enforceFooBar, {
         },
     ],
 });
-
-console.log("All tests passed for enforce-foo-bar.test.ts");
