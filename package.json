@@ -14,7 +14,7 @@
     "scripts": {
         "test": "vitest run",
         "prebuild": "rm -rf lib",
-        "build": "rollup --config rollup.config.ts --configPlugin typescript",
+        "build": "tsdown",
         "prepublishOnly": "npm run build"
     },
     "license": "MIT",
@@ -22,10 +22,8 @@
         "eslint": ">=8"
     },
     "devDependencies": {
-        "@rollup/plugin-typescript": "^12.3.0",
         "eslint": "^9.39.1",
-        "rollup": "^4.52.5",
-        "tslib": "^2.8.1",
+        "tsdown": "^0.16.0",
         "typescript": "^5.9.3",
         "vitest": "^4.0.7"
     }
