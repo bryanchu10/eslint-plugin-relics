@@ -5,7 +5,7 @@
     "type": "module",
     "main": "lib/index.cjs",
     "exports": {
-        "import": "./lib/index.js",
+        "import": "./lib/index.mjs",
         "require": "./lib/index.cjs"
     },
     "files": [
