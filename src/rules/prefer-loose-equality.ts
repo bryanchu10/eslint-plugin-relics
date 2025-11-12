@@ -10,8 +10,8 @@ export const preferLooseEquality: Rule.RuleModule = {
         fixable: "code",
         schema: [],
         messages: {
-            preferLooseEquality: `使用 "{{expected}}" 取代 "{{actual}}".`
-        }
+            preferLooseEquality: `使用 "{{expected}}" 取代 "{{actual}}".`,
+        },
     },
     create(context: Rule.RuleContext) {
         return {
@@ -19,16 +19,17 @@ export const preferLooseEquality: Rule.RuleModule = {
                 if (node.operator === "===" || node.operator === "!==") {
                     const expected = node.operator === "===" ? "==" : "!=";
                     context.report({
-                        node,
+                        node: node,
                         messageId: "preferLooseEquality",
                         data: {
-                            expected,
-                            actual: node.operator
+                            expected: expected,
+                            actual: node.operator,
                         },
                         fix(fixer) {
                             if (!node.left.range || !node.right.range) {
                                 return null;
                             }
+
                             return fixer.replaceTextRange([
                                 node.left.range[1],
                                 node.right.range[0],
@@ -38,5 +39,5 @@ export const preferLooseEquality: Rule.RuleModule = {
                 }
             }
         };
-    }
+    },
 };

@@ -42,7 +42,7 @@ export const preferExplicitPropertyChecks: Rule.RuleModule = {
                 }
                 if (!isIdentifier(chain.property)) {
                     return;
-                };
+                }
                 parts.unshift(chain.property.name);
                 chain = chain.object;
             }
@@ -74,10 +74,10 @@ export const preferExplicitPropertyChecks: Rule.RuleModule = {
 
             const reportObj: Rule.ReportDescriptor = {
                 node: fixerTarget,
-                messageId,
+                messageId: messageId,
                 data: {
-                    original,
-                    suggested,
+                    original: original,
+                    suggested: suggested,
                 },
             };
 
@@ -116,7 +116,7 @@ export const preferExplicitPropertyChecks: Rule.RuleModule = {
                 if (node.expression && node.expression.type === "ChainExpression") {
                     checkChainExpression(node.expression as ChainExpression, node.expression, false);
                 }
-            }
+            },
         };
-    }
+    },
 };

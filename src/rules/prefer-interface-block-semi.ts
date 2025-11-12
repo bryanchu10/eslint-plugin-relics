@@ -3,13 +3,13 @@ export const preferInterfaceBlockSemi: Rule.RuleModule = {
     meta: {
         type: "suggestion",
         docs: {
-            description: "interface block 加分號"
+            description: "interface block 加分號",
         },
         fixable: "code",
         schema: [],
         messages: {
-            missingSemi: "interface block 加分號。"
-        }
+            missingSemi: "interface block 加分號。",
+        },
     },
     create(context: Rule.RuleContext) {
         return {
@@ -18,7 +18,7 @@ export const preferInterfaceBlockSemi: Rule.RuleModule = {
                 const tokenAfter = sourceCode.getTokenAfter(node);
                 if (!tokenAfter || tokenAfter.value !== ";") {
                     context.report({
-                        node,
+                        node: node,
                         messageId: "missingSemi",
                         fix(fixer: Rule.RuleFixer) {
                             return fixer.insertTextAfter(node, ";");
@@ -27,5 +27,5 @@ export const preferInterfaceBlockSemi: Rule.RuleModule = {
                 }
             },
         };
-    }
+    },
 };

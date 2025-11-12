@@ -13,7 +13,7 @@ export const objectShorthand: Rule.RuleModule = {
             methodMustShorthand: "方法 '{{name}}' 使用縮寫，請將 '{{original}}' 改成 '{{name}}() { ... }'"
         },
         schema: [],
-        fixable: "code"
+        fixable: "code",
     },
     create(context: Rule.RuleContext) {
         return {
@@ -23,7 +23,7 @@ export const objectShorthand: Rule.RuleModule = {
                     const sourceCode = context.getSourceCode();
                     const keyText = sourceCode.getText(node.key as Node);
                     context.report({
-                        node,
+                        node: node,
                         messageId: "propertyNoShorthand",
                         data: { name: keyText },
                         fix(fixer: Rule.RuleFixer) {
@@ -40,9 +40,12 @@ export const objectShorthand: Rule.RuleModule = {
                     const body = sourceCode.getText(func.body as Node);
                     const original = sourceCode.getText(node);
                     context.report({
-                        node,
+                        node: node,
                         messageId: "methodMustShorthand",
-                        data: { name: keyText, original },
+                        data: { 
+                            name: keyText,
+                            original: original,
+                        },
                         fix(fixer: Rule.RuleFixer) {
                             return fixer.replaceTextRange(node.range!, `${keyText}(${params}) ${body}`);
                         }
