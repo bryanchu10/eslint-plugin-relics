@@ -1,8 +1,9 @@
 import { RuleTester } from "eslint";
+import parser from "@typescript-eslint/parser";
 import { objectShorthand } from "../src/rules/object-shorthand";
 
 const ruleTester = new RuleTester({
-    languageOptions: { ecmaVersion: 2015 },
+    languageOptions: { ecmaVersion: 2015, parser },
 });
 
 ruleTester.run("object-shorthand", objectShorthand, {
@@ -16,6 +17,8 @@ ruleTester.run("object-shorthand", objectShorthand, {
         // function 參數解構不應報錯
         { code: "function test({ foo, bar }) {}" },
         { code: "function test({ foo = 1, bar }) {}" },
+        // TypeScript 型別註解 function 參數解構不應報錯
+        { code: "const fn = ({ foo }: { foo: string }) => {};" },
     ],
     invalid: [
         {

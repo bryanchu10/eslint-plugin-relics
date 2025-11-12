@@ -20,10 +20,11 @@ export const objectShorthand: Rule.RuleModule = {
             Property(node: Property) {
                 // 只處理 ObjectExpression 裡的 Property
                 const parent = (node as Node & { parent?: Node }).parent;
-                function isObjectExpression(n: unknown): n is { type: "ObjectExpression" } {
+                function isObjectExpressionOnly(n: unknown): n is { type: "ObjectExpression" } {
                     return !!n && typeof n === "object" && (n as { type?: string }).type === "ObjectExpression";
                 }
-                if (isObjectExpression(parent)) {
+                // 僅在 ObjectExpression 報錯，排除 TypeScript 型別註解
+                if (isObjectExpressionOnly(parent)) {
                     // Property shorthand: { foo }
                     if (node.shorthand && node.method === false) {
                         const sourceCode = context.getSourceCode();
