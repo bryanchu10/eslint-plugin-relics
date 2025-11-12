@@ -10,6 +10,12 @@ ruleTester.run("object-shorthand", objectShorthand, {
         { code: "const obj = { foo: foo, bar() {} };" },
         { code: "const obj = { a: a, b: b, c() {} };" },
         { code: "const obj = { x: x, y() { return 1; } };" },
+        // 解構賦值不應報錯
+        { code: "const { foo, bar } = obj;" },
+        { code: "const { foo = 1, bar } = obj;" },
+        // function 參數解構不應報錯
+        { code: "function test({ foo, bar }) {}" },
+        { code: "function test({ foo = 1, bar }) {}" },
     ],
     invalid: [
         {

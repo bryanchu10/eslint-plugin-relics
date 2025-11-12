@@ -18,38 +18,45 @@ export const objectShorthand: Rule.RuleModule = {
     create(context: Rule.RuleContext) {
         return {
             Property(node: Property) {
-                // Property shorthand: { foo }
-                if (node.shorthand && node.method === false) {
-                    const sourceCode = context.getSourceCode();
-                    const keyText = sourceCode.getText(node.key as Node);
-                    context.report({
-                        node: node,
-                        messageId: "propertyNoShorthand",
-                        data: { name: keyText },
-                        fix(fixer: Rule.RuleFixer) {
-                            return fixer.replaceTextRange(node.range!, `${keyText}: ${keyText}`);
-                        }
-                    });
+                // 只處理 ObjectExpression 裡的 Property
+                const parent = (node as Node & { parent?: Node }).parent;
+                function isObjectExpression(n: unknown): n is { type: "ObjectExpression" } {
+                    return !!n && typeof n === "object" && (n as { type?: string }).type === "ObjectExpression";
                 }
-                // Method not shorthand: { bar: function() { ... } }
-                if (node.method === false && node.value.type === "FunctionExpression" && !node.shorthand) {
-                    const sourceCode = context.getSourceCode();
-                    const keyText = sourceCode.getText(node.key as Node);
-                    const func = node.value as FunctionExpression;
-                    const params = func.params.map((p: Pattern) => sourceCode.getText(p as Node)).join(", ");
-                    const body = sourceCode.getText(func.body as Node);
-                    const original = sourceCode.getText(node);
-                    context.report({
-                        node: node,
-                        messageId: "methodMustShorthand",
-                        data: { 
-                            name: keyText,
-                            original: original,
-                        },
-                        fix(fixer: Rule.RuleFixer) {
-                            return fixer.replaceTextRange(node.range!, `${keyText}(${params}) ${body}`);
-                        }
-                    });
+                if (isObjectExpression(parent)) {
+                    // Property shorthand: { foo }
+                    if (node.shorthand && node.method === false) {
+                        const sourceCode = context.getSourceCode();
+                        const keyText = sourceCode.getText(node.key as Node);
+                        context.report({
+                            node: node,
+                            messageId: "propertyNoShorthand",
+                            data: { name: keyText },
+                            fix(fixer: Rule.RuleFixer) {
+                                return fixer.replaceTextRange(node.range!, `${keyText}: ${keyText}`);
+                            }
+                        });
+                    }
+                    // Method not shorthand: { bar: function() { ... } }
+                    if (node.method === false && node.value.type === "FunctionExpression" && !node.shorthand) {
+                        const sourceCode = context.getSourceCode();
+                        const keyText = sourceCode.getText(node.key as Node);
+                        const func = node.value as FunctionExpression;
+                        const params = func.params.map((p: Pattern) => sourceCode.getText(p as Node)).join(", ");
+                        const body = sourceCode.getText(func.body as Node);
+                        const original = sourceCode.getText(node);
+                        context.report({
+                            node: node,
+                            messageId: "methodMustShorthand",
+                            data: { 
+                                name: keyText,
+                                original: original,
+                            },
+                            fix(fixer: Rule.RuleFixer) {
+                                return fixer.replaceTextRange(node.range!, `${keyText}(${params}) ${body}`);
+                            }
+                        });
+                    }
                 }
             }
         };
