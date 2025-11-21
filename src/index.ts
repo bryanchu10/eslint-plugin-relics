@@ -8,14 +8,12 @@ export const rules = {
     "object-shorthand": objectShorthand,
     "prefer-explicit-property-checks": preferExplicitPropertyChecks,
     "prefer-loose-equality": preferLooseEquality,
-    "prefer-interface-block-semi": preferInterfaceBlockSemi,
 };
 
 const recommendedRules = {
     "relics/object-shorthand": "error",
     "relics/prefer-explicit-property-checks": "error",
     "relics/prefer-loose-equality": "error",
-    "relics/prefer-interface-block-semi": "error",
 }
 
 export const configs = {
